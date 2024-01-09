@@ -6,7 +6,7 @@ import 'package:ecom/common_widgets/input_text_field.dart';
 import 'package:ecom/consts/consts.dart';
 import 'package:ecom/home.dart';
 import 'package:ecom/screens/auth_screen/sign_up.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecom/controller/auth_controller.dart';
 import 'package:get/get.dart';
 
 class SignInEmail extends StatefulWidget {
@@ -19,8 +19,7 @@ class SignInEmail extends StatefulWidget {
 class _SignInEmailState extends State<SignInEmail> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  var controller  = Get.put(AuthController());
   bool _isPasswordVisible = false; // Initially, password is hidden
 
   void _togglePasswordVisibility() {
@@ -63,9 +62,8 @@ class _SignInEmailState extends State<SignInEmail> {
                     inputTextField(
                         controller: _emailController,
                         labelText: 'Email',
-                        icon: Icons.email,
                     color: redColor,
-                    inputType: TextInputType.emailAddress),
+                    inputType: TextInputType.emailAddress, icon: Icons.email),
                     10.heightBox,
                     inputPasswordField(
                         controller: _passwordController,
@@ -84,9 +82,14 @@ class _SignInEmailState extends State<SignInEmail> {
                         buttonName: 'Log in',
                         textColor: Colors.white,
                         buttonColor: redColor,
-                        onPressedCallback: () {
-                          _signInWithEmailAndPassword(
-                              _emailController.text, _passwordController.text);
+                        onPressedCallback: () async{
+                          await controller.login(email: _emailController.text, password: _passwordController.text,context: context).then((value) {
+                            if(value != null){
+                              Get.offAll(() => const Home());
+                            }
+                          });
+                          // _signInWithEmailAndPassword(
+                          //     _emailController.text, _passwordController.text);
                         }).box.width(context.screenWidth - 50).make(),
                     const SizedBox(height: 10.0),
                     const Row(
@@ -147,51 +150,5 @@ class _SignInEmailState extends State<SignInEmail> {
         ),
       ),
     ));
-  }
-
-  void _signInWithEmailAndPassword(String email, String password) async {
-    try {
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Access the authenticated user from the userCredential
-      User? user = userCredential.user;
-
-      if (user != null) {
-        Get.to(() => const Home());
-      }
-    } on FirebaseAuthException catch (e) {
-      // Handle specific FirebaseAuth error codes
-      if (e.code == 'user-not-found' ||
-          e.code == 'wrong-password' ||
-          e.code == 'invalid-email') {
-        // Show an error dialog for these specific errors
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Error'),
-              content: const Text('Invalid email or password.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        // Handle other FirebaseAuthException errors
-        print('FirebaseAuthException: ${e.message}');
-      }
-    } catch (e) {
-      // Handle other exceptions
-      print('Error: $e');
-    }
   }
 }

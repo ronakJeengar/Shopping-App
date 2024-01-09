@@ -1,12 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/common_widgets/app_logo.dart';
 import 'package:ecom/common_widgets/bg.dart';
 import 'package:ecom/common_widgets/button.dart';
 import 'package:ecom/common_widgets/input_text_field.dart';
 import 'package:ecom/consts/consts.dart';
-import 'package:ecom/screees/auth_screen/sign_in_via_email.dart';
-// import 'package:ecom/sign_in_via_email.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecom/controller/auth_controller.dart';
+import 'package:ecom/home.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -26,6 +24,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController _numberController = TextEditingController();
   final TextEditingController _dobController = TextEditingController();
   bool isChecked = false;
+  var controller = Get.put(AuthController());
 
   bool isPasswordValid(String value) {
     // Minimum 8 characters, maximum 16 characters
@@ -86,24 +85,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
       });
     }
   }
-
-
-  // Future<void> _selectDate(BuildContext context) async {
-  //   final DateTime? picked = await showDatePicker(
-  //     context: context,
-  //     initialDate: DateTime.now(),
-  //     firstDate: DateTime(1900),
-  //     lastDate: DateTime.now(),
-  //   );
-  //
-  //   if (picked != null) {
-  //     final formattedDate =
-  //         DateFormat('dd-MM-yyyy').format(picked); // Format the date
-  //     setState(() {
-  //       _dobController.text = formattedDate;
-  //     });
-  //   }
-  // }
 
   @override
   void dispose() {
@@ -310,38 +291,45 @@ class _SignUpScreenState extends State<SignUpScreen> {
       } else {
         try {
           // Create user with email and password
-          UserCredential userCredential =
-              await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: _emailController.text,
-            password: _passwordController.text,
-          );
+          await controller.signup(email: _emailController.text, password: _passwordController.text, context: context).then((value) {
+            return controller.storeUserData(
+              email: _emailController.text,
+              password: _passwordController.text,
+              username: _usernameController.text,
+              number: _numberController.text,
+              dob: _dobController.text,
+            );
+          }).then((value) {
+            VxToast.show(context, msg: "You have logged in successfully.");
+            Get.offAll(() => const Home());
+          });
 
-          if (userCredential.user != null) {
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(userCredential.user!.uid)
-                .set({
-              'username': _usernameController.text,
-              'email': _emailController.text,
-              'phoneNumber': _numberController.text,
-              'dob': _dobController.text,
-              'password': _passwordController.text
-              // Add other fields as needed
-            });
-            Get.to(() => const SignInEmail());
-          }
-        } on FirebaseAuthException catch (e) {
-          // Show an error if account creation fails
-          showDialog(
+          // if (userCredential.user != null) {
+          //   await FirebaseFirestore.instance
+          //       .collection('users')
+          //       .doc(userCredential.user!.uid)
+          //       .set({
+          //     'username': _usernameController.text,
+          //     'email': _emailController.text,
+          //     'phoneNumber': _numberController.text,
+          //     'dob': _dobController.text,
+          //     'password': _passwordController.text
+          //     // Add other fields as needed
+          //   });
+          //   Get.to(() => const SignInEmail());
+          // }
+        } catch (e) {
+           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('Error'),
-                content: Text('${e.message}'),
+                content: Text(e.toString()),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      auth.signOut();
+                      // Navigator.of(context).pop();
                     },
                     child: const Text('OK'),
                   ),
