@@ -1,7 +1,5 @@
-import 'package:ecom/bottom_nav_bar.dart';
 import 'package:ecom/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'consts/consts.dart';

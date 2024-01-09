@@ -1,10 +1,10 @@
-import 'package:ecom/bottom_nav_bar.dart';
 import 'package:ecom/common_widgets/app_logo.dart';
 import 'package:ecom/common_widgets/bg.dart';
 import 'package:ecom/common_widgets/button.dart';
 import 'package:ecom/common_widgets/circular_avatar.dart';
 import 'package:ecom/common_widgets/input_text_field.dart';
 import 'package:ecom/consts/consts.dart';
+import 'package:ecom/home.dart';
 import 'package:ecom/screens/auth_screen/sign_up.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -160,7 +160,7 @@ class _SignInEmailState extends State<SignInEmail> {
       User? user = userCredential.user;
 
       if (user != null) {
-        Get.to(() => const NavBar());
+        Get.to(() => const Home());
       }
     } on FirebaseAuthException catch (e) {
       // Handle specific FirebaseAuth error codes
