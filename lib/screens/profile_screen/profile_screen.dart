@@ -1,5 +1,7 @@
 import 'package:ecom/common_widgets/bg.dart';
 import 'package:ecom/consts/consts.dart';
+import 'package:ecom/controller/auth_controller.dart';
+import 'package:get/get.dart';
 
 class Profile extends StatelessWidget {
   const Profile({super.key});
@@ -55,7 +57,9 @@ class Profile extends StatelessWidget {
                   .border(width: 1, color: Colors.white)
                   .roundedSM
                   .make()
-                  .onTap(() {}),
+                  .onTap(() async{
+                    await Get.put(AuthController()).logout(context);
+              }),
             ],
           ),
         ),
