@@ -1,7 +1,9 @@
 import 'package:ecom/consts/consts.dart';
 import 'package:ecom/controller/home_controller.dart';
+import 'package:ecom/screens/cart_screen/cart_screen.dart';
 import 'package:ecom/screens/category_screen/category_screen.dart';
 import 'package:ecom/screens/home_screen/home_screen.dart';
+import 'package:ecom/screens/profile_screen/profile_screen.dart';
 import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
@@ -28,12 +30,8 @@ class _HomeState extends State<Home> {
   var navItemScreen = [
     const HomeScreen(),
     const CategoryScreen(),
-    Container(
-      color: Colors.purple,
-    ),
-    Container(
-      color: Colors.cyan,
-    ),
+    const Cart(),
+    const Profile()
   ];
 
   @override
