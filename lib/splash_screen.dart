@@ -1,6 +1,6 @@
 import 'package:ecom/common_widgets/app_logo.dart';
 import 'package:ecom/consts/consts.dart';
-import 'package:ecom/home.dart';
+import 'package:ecom/screens/auth_screen/sign_in_via_email.dart';
 import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   changeScreen(){
     Future.delayed(const Duration(seconds: 3),(){
-      Get.to(() =>  const Home());
+      Get.to(() =>  const SignInEmail());
     });
   }
 
