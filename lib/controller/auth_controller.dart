@@ -1,126 +1,68 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecom/home.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:ecom/consts/consts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ecom/screens/auth_screen/sign_in_via_email.dart';
 
 class AuthController extends GetxController {
-  Future<UserCredential?> login({email, password, context}) async {
-    UserCredential? userCredential;
-    try {
-      userCredential = await auth.signInWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-      // Access the authenticated user from the userCredential
-      User? user = userCredential.user;
+  Rx<User?> currentUser = Rx<User?>(null);
 
-      if (user != null) {
-        Get.to(() => const Home());
-      }
-    } on FirebaseAuthException catch (e) {
-      // Handle specific FirebaseAuth error codes
-      if (e.code == 'user-not-found' ||
-          e.code == 'wrong-password' ||
-          e.code == 'invalid-email') {
-        // Show an error dialog for these specific errors
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Error'),
-        //       content: const Text('Invalid email or password.'),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           onPressed: () {
-        //             Navigator.pop(context);
-        //           },
-        //           child: const Text('OK'),
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
-        VxToast.show(context, msg: e.toString());
-      } else {
-        // Handle other FirebaseAuthException errors
-        print('FirebaseAuthException: ${e.message}');
-      }
-    } catch (e) {
-      // Handle other exceptions
-      print('Error: $e');
-    }
-    return userCredential;
-  }
-
-  Future<UserCredential?> signup({email, password, context}) async {
-    UserCredential? userCredential;
-    try {
-      userCredential = await auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      // Access the authenticated user from the userCredential
-      User? user = userCredential.user;
-
-      if (user != null) {
-        Get.to(() => const Home());
-      }
-    } on FirebaseAuthException catch (e) {
-      // Handle specific FirebaseAuth error codes
-      if (e.code == 'user-not-found' ||
-          e.code == 'wrong-password' ||
-          e.code == 'invalid-email') {
-        // Show an error dialog for these specific errors
-        // showDialog(
-        //   context: context,
-        //   builder: (BuildContext context) {
-        //     return AlertDialog(
-        //       title: const Text('Error'),
-        //       content: const Text('Invalid email or password.'),
-        //       actions: <Widget>[
-        //         TextButton(
-        //           onPressed: () {
-        //             Navigator.pop(context);
-        //           },
-        //           child: const Text('OK'),
-        //         ),
-        //       ],
-        //     );
-        //   },
-        // );
-        VxToast.show(context, msg: e.toString());
-      } else {
-        // Handle other FirebaseAuthException errors
-        print('FirebaseAuthException: ${e.message}');
-      }
-    } catch (e) {
-      // Handle other exceptions
-      print('Error: $e');
-    }
-    return userCredential;
-  }
-
-  storeUserData({username, email, password, dob, number}) async {
-    DocumentReference store =
-        firestore.collection(userCollections).doc(currentUser!.uid);
-    store.set({
-      'username': username,
-      'email': email,
-      'phoneNumber': number,
-      'dob': dob,
-      'password': password,
-      'imgUrl': ''
+  @override
+  void onInit() {
+    super.onInit();
+    currentUser.value = _auth.currentUser;
+    _auth.authStateChanges().listen((user) {
+      currentUser.value = user;
     });
   }
 
-  logout(context) async {
+  Future<void> signUpWithEmailAndPassword(
+      String email, String password, String username) async {
     try {
-      auth.signOut();
+      UserCredential userCredential =
+          await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      if (userCredential.user != null) {
+        // Sign up successful, you can handle additional actions here if needed
+        await _firestore.collection('users').doc(userCredential.user!.uid).set({
+          'username': username,
+          'email': email,
+          // Add other fields as needed
+        });
+        print('Sign-up successful: ${userCredential.user!.email}');
+      }
     } catch (e) {
-      VxToast.show(context, msg: e.toString());
+      // Handle sign-up failure (show error message, etc.)
+      print('Sign-up failed: $e');
     }
+  }
+
+  Future<void> signInWithEmailAndPassword(String email, String password) async {
+    try {
+      await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      Get.offAll(() => const Home());
+      print('Sign-in successful: $email');
+      // You can perform additional actions after successful sign-in if needed
+    } catch (e) {
+      // Handle sign-in failure (show error message, etc.)
+      print('Sign-in failed: $e');
+    }
+  }
+
+  void signOut() {
+    _auth.signOut();
+    Get.to(() => SignInPage());
+  }
+
+  void clearCurrentUser() {
+    currentUser.value = null;
   }
 }
