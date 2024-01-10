@@ -1,20 +1,22 @@
-import 'package:ecom/splash_screen.dart';
+import 'package:ecom/controller/auth_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
 import 'consts/consts.dart';
+import 'package:ecom/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  AuthController authController = AuthController(); // Initialize AuthController here
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +31,10 @@ class MyApp extends StatelessWidget {
               ),
               backgroundColor: Colors.transparent),
           fontFamily: regular),
-      home: const SplashScreen(),
+      initialBinding: BindingsBuilder(() {
+        Get.put(AuthController()); // Initialize AuthController here
+      }),
+      home: SplashScreen(),
     );
   }
 }
