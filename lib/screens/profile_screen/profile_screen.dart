@@ -1,10 +1,13 @@
 import 'package:ecom/common_widgets/bg.dart';
 import 'package:ecom/consts/consts.dart';
 import 'package:ecom/controller/auth_controller.dart';
+import 'package:ecom/screens/auth_screen/sign_in_via_email.dart';
 import 'package:get/get.dart';
 
 class Profile extends StatelessWidget {
-  const Profile({super.key});
+
+  final AuthController authController = Get.find<AuthController>();
+  Profile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +60,9 @@ class Profile extends StatelessWidget {
                   .border(width: 1, color: Colors.white)
                   .roundedSM
                   .make()
-                  .onTap(() async{
-                    await Get.put(AuthController()).logout(context);
+                  .onTap(() {
+                auth.signOut();
+                Get.to(() => SignInPage());
               }),
             ],
           ),
@@ -85,7 +89,8 @@ class Profile extends StatelessWidget {
         ),
         // 20.heightBox,
         Column(
-                children: List.generate(6,
+                children: List.generate(
+          6,
           (index) => Column(children: [
             ListTile(
               leading: Image.asset(
