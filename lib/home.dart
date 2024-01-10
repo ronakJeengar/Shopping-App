@@ -30,8 +30,7 @@ class _HomeState extends State<Home> {
   var navItemScreen = [
     const HomeScreen(),
     const CategoryScreen(),
-    const Cart(),
-    const Profile()
+    const Cart(), Profile()
   ];
 
   @override
