@@ -6,6 +6,7 @@ import 'dart:io';
 
 class EditProfileScreen extends StatefulWidget {
   final dynamic data;
+
   const EditProfileScreen({super.key, required this.data});
 
   @override
@@ -17,28 +18,39 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    profileController.usernameController.text = widget.data?['username'] ?? '';
-    profileController.passwordController.text = widget.data?['password'] ?? '';
+    var userData = widget.data;
 
     return bg(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(),
         body: Obx(
           () => Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              profileController.profileImgPath.isEmpty
+              //data of image url is empty and image path is empty
+              userData['imageUrl'] == '' &&
+                      profileController.profileImgPath.isEmpty
                   ? Image.asset(
                       imgProfile,
                       width: 100,
                       fit: BoxFit.cover,
                     ).box.roundedFull.clip(Clip.antiAlias).make()
+                  // data of image url is not empty but the image path is empty
+                  : userData['imageUrl'] != '' &&
+                          profileController.profileImgPath.isEmpty
+                      ? Image.network(
+                          userData['imageUrl'],
+                          width: 100,
+                          fit: BoxFit.cover,
+                        ).box.roundedFull.clip(Clip.antiAlias).make()
+                      //If the image url is empty
                   : Image.file(File(profileController.profileImgPath.value),
-                          width: 100, fit: BoxFit.cover)
-                      .box
-                      .roundedFull
-                      .clip(Clip.antiAlias)
-                      .make(),
+                              width: 100, fit: BoxFit.cover)
+                          .box
+                          .roundedFull
+                          .clip(Clip.antiAlias)
+                          .make(),
               10.heightBox,
               ElevatedButton(
                   onPressed: () {
@@ -75,17 +87,32 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
               ),
               20.heightBox,
-              SizedBox(
-                width: context.screenWidth - 40,
-                child: ElevatedButton(
-                    onPressed: () {},
-                    style: ElevatedButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: redColor,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0))),
-                    child: const Text("Save")),
-              ),
+              profileController.isLoading.value
+                  ? const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation(redColor),
+                    )
+                  : SizedBox(
+                      width: context.screenWidth - 40,
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            profileController.isLoading(true);
+                            await profileController.uploadProfileImage();
+                            await profileController.updateProfile(
+                                imageUrl: profileController.profileImageLink,
+                                username:
+                                    profileController.usernameController.text,
+                                password:
+                                    profileController.passwordController.text);
+                            VxToast.show(context,
+                                msg: "Profile updated Successfully");
+                          },
+                          style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.white,
+                              backgroundColor: redColor,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10.0))),
+                          child: const Text("Save")),
+                    ),
             ],
           )
               .box
@@ -100,4 +127,3 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 }
-
