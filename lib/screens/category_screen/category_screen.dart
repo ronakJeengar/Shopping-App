@@ -14,27 +14,27 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
 
   List<dynamic> categoriesImgs = [
-imgFc1,
+imgS1,
+    imgFc1,
     imgFc2,
     imgFc3,
     imgFc4,
     imgFc5,
     imgFc6,
     imgFc7,
-    imgFc8,
     imgFc9
   ];
 
   List<dynamic> categoriesTitles = [
-'Woman Clothing',
+    'Woman Dresses',
     'Man Clothing',
     'Computer Accessories',
     'Automobile',
     'Kids & Toys',
-    'Fashion',
+    'Sports',
+    'Mobile Phones',
     'Cosmetics',
-    'Fitness',
-    'Study Material',
+    'Furniture',
   ];
 
   static List<dynamic> subCategoryWomanClothing =  [
@@ -111,7 +111,6 @@ imgFc1,
     subCategoryFitness,
     subCategoryStudyMaterial
   ];
-
 
   @override
   Widget build(BuildContext context) {
