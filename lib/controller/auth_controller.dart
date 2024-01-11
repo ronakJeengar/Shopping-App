@@ -7,6 +7,7 @@ import 'package:ecom/screens/auth_screen/sign_in_via_email.dart';
 class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  RxBool isLoading = false.obs;
 
   Rx<User?> currentUser = Rx<User?>(null);
 
@@ -32,6 +33,13 @@ class AuthController extends GetxController {
         await _firestore.collection('users').doc(userCredential.user!.uid).set({
           'username': username,
           'email': email,
+          'password': password,
+          'id': userCredential.user!.uid,
+          'imageUrl': '',
+          'cartCount': '00',
+          'wishListCount': '00',
+          'orderCount': '00'
+
           // Add other fields as needed
         });
         print('Sign-up successful: ${userCredential.user!.email}');
@@ -42,7 +50,10 @@ class AuthController extends GetxController {
     }
   }
 
-  Future<void> signInWithEmailAndPassword(String email, String password) async {
+  Future<UserCredential?> signInWithEmailAndPassword(
+      String email, String password) async {
+    UserCredential? userCredential;
+
     try {
       await _auth.signInWithEmailAndPassword(
         email: email,
@@ -55,6 +66,7 @@ class AuthController extends GetxController {
       // Handle sign-in failure (show error message, etc.)
       print('Sign-in failed: $e');
     }
+    return userCredential;
   }
 
   void signOut() {
