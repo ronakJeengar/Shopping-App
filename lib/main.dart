@@ -1,4 +1,5 @@
 import 'package:ecom/controller/auth_controller.dart';
+import 'package:ecom/controller/profile_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
@@ -11,7 +12,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   AuthController authController = AuthController(); // Initialize AuthController here
-
+  ProfileController profileController = ProfileController();
   runApp(const MyApp());
 }
 
@@ -31,10 +32,17 @@ class MyApp extends StatelessWidget {
               ),
               backgroundColor: Colors.transparent),
           fontFamily: regular),
-      initialBinding: BindingsBuilder(() {
-        Get.put(AuthController()); // Initialize AuthController here
-      }),
+      initialBinding: InitialBindings(), // Add this line
       home: SplashScreen(),
     );
+  }
+}
+
+class InitialBindings extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(AuthController());
+    Get.put(ProfileController());
+    // Add other controller registrations if needed
   }
 }
