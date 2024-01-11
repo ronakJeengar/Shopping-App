@@ -49,7 +49,6 @@ class _ProfileState extends State<Profile> {
                     icon: const Icon(Icons.edit),
                     onPressed: () {
                       profileController.usernameController.text = data['username'] ?? '';
-                      profileController.passwordController.text = data['password'] ?? '';
                       Get.to(() => EditProfileScreen(data: data));
                     },
                   ),
