@@ -117,6 +117,7 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
+    - lib/services/category_model.json
 #    - assets/shop/
 #    - assets/csv/PRODUCTS_MOCK_DATA.csv
 #    - assets/csv/CATEGORY_MOCK_DATA.csv
