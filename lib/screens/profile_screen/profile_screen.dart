@@ -19,12 +19,6 @@ class _ProfileState extends State<Profile> {
   final AuthController authController = Get.find<AuthController>();
   final ProfileController profileController = Get.find<ProfileController>();
 
-  // List<dynamic> checkTitle = [
-  //   'in your cart',
-  //   'in your wishlist',
-  //   'your orders'
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return bg(
@@ -54,6 +48,8 @@ class _ProfileState extends State<Profile> {
                     color: Colors.white,
                     icon: const Icon(Icons.edit),
                     onPressed: () {
+                      profileController.usernameController.text = data['username'] ?? '';
+                      profileController.passwordController.text = data['password'] ?? '';
                       Get.to(() => EditProfileScreen(data: data));
                     },
                   ),
@@ -65,8 +61,15 @@ class _ProfileState extends State<Profile> {
                     children: [
                       Row(
                         children: [
+                          data['imageUrl'] == ''?
                           Image.asset(
                             imgProfile,
+                            width: 100,
+                            fit: BoxFit.cover,
+                          ).box.roundedFull.clip(Clip.antiAlias).make()
+                          :
+                          Image.network(
+                            data['imageUrl'],
                             width: 100,
                             fit: BoxFit.cover,
                           ).box.roundedFull.clip(Clip.antiAlias).make(),
