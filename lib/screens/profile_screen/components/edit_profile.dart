@@ -45,7 +45,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                           fit: BoxFit.cover,
                         ).box.roundedFull.clip(Clip.antiAlias).make()
                       //If the image url is empty
-                  : Image.file(File(profileController.profileImgPath.value),
+                      : Image.file(File(profileController.profileImgPath.value),
                               width: 100, fit: BoxFit.cover)
                           .box
                           .roundedFull
@@ -76,10 +76,22 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               ),
               20.heightBox,
               TextFormField(
-                controller: profileController.passwordController,
+                controller: profileController.oldPasswordController,
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Old Password',
+                  border: OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Adjust the border radius
+                  ),
+                ),
+              ),
+              20.heightBox,
+              TextFormField(
+                controller: profileController.newPasswordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: 'New Password',
                   border: OutlineInputBorder(
                     borderRadius:
                         BorderRadius.circular(10.0), // Adjust the border radius
@@ -96,15 +108,36 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: ElevatedButton(
                           onPressed: () async {
                             profileController.isLoading(true);
-                            await profileController.uploadProfileImage();
-                            await profileController.updateProfile(
-                                imageUrl: profileController.profileImageLink,
-                                username:
-                                    profileController.usernameController.text,
-                                password:
-                                    profileController.passwordController.text);
-                            VxToast.show(context,
-                                msg: "Profile updated Successfully");
+                            if (profileController.profileImgPath.isNotEmpty) {
+                              await profileController.uploadProfileImage();
+                            } else {
+                              profileController.profileImageLink =
+                                  userData['imageUrl'];
+                            }
+
+                            //If old password matches with the current user database password
+                            if (userData['password'] ==
+                                profileController.oldPasswordController.text) {
+                              //authenticate after checking the password
+                              await profileController.changeAuthPassword(
+                                  email: userData['email'],
+                                  password: profileController
+                                      .oldPasswordController.text,
+                                  newpassword: profileController
+                                      .newPasswordController.text);
+
+                              await profileController.updateProfile(
+                                  imageUrl: profileController.profileImageLink,
+                                  username:
+                                      profileController.usernameController.text,
+                                  password: profileController
+                                      .newPasswordController.text);
+                              VxToast.show(context, msg: "Profile updated");
+                            } else {
+                              VxToast.show(context,
+                                  msg: "Password did not match.");
+                              profileController.isLoading(false);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.white,
