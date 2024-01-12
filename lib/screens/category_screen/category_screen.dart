@@ -1,5 +1,6 @@
 import 'package:ecom/common_widgets/bg.dart';
 import 'package:ecom/consts/consts.dart';
+import 'package:ecom/controller/product_controller.dart';
 import 'package:ecom/screens/category_screen/categories_details.dart';
 import 'package:ecom/screens/category_screen/component/all_categories.dart';
 import 'package:get/get.dart';
@@ -37,80 +38,7 @@ imgS1,
     'Furniture',
   ];
 
-  static List<dynamic> subCategoryWomanClothing =  [
-    'Woman Clothing',
-    'Woman Clothing',
-    'Woman Clothing',
-    'Woman Clothing',
-  ];
-
-  static List<dynamic> subCategoryManClothing = [
-    'Man Clothing',
-    'Man Clothing',
-    'Man Clothing',
-    'Man Clothing',
-  ];
-
-  static List<dynamic> subCategoryComputerAccessories = [
-    'Computer Accessories',
-    'Computer Accessories',
-    'Computer Accessories',
-    'Computer Accessories',
-  ];
-
-  static List<dynamic> subCategoryAutomobile = [
-    'Automobile',
-    'Automobile',
-    'Automobile',
-    'Automobile',
-  ];
-
-  static List<dynamic> subCategoryKidsToys = [
-    'KidsToys',
-    'KidsToys',
-    'KidsToys',
-    'KidsToys',
-  ];
-
-  static List<dynamic> subCategoryFashion = [
-    'Fashion',
-    'Fashion',
-    'Fashion',
-    'Fashion',
-  ];
-
-  static List<dynamic> subCategoryCosmetics = [
-    'Cosmetics',
-    'Cosmetics',
-    'Cosmetics',
-    'Cosmetics',
-  ];
-
-  static List<dynamic> subCategoryFitness = [
-    'Fitness',
-    'Fitness',
-    'Fitness',
-    'Fitness',
-  ];
-
-  static List<dynamic> subCategoryStudyMaterial = [
-    'Study Material',
-    'Study Material',
-    'Study Material',
-    'Study Material',
-  ];
-
-  static List<List<dynamic>> subCategories = [
-    subCategoryWomanClothing,
-    subCategoryManClothing,
-    subCategoryComputerAccessories,
-    subCategoryAutomobile,
-    subCategoryKidsToys,
-    subCategoryFashion,
-    subCategoryCosmetics,
-    subCategoryFitness,
-    subCategoryStudyMaterial
-  ];
+  final ProductController productController = Get.find<ProductController>();
 
   @override
   Widget build(BuildContext context) {
@@ -134,10 +62,10 @@ imgS1,
               itemBuilder: (context, index) {
                 return getCategories(
                     image: categoriesImgs[index],
-                    title: categoriesTitles[index],
-                  subCategories: subCategories
+                    title: categoriesTitles[index]
                 ).onTap(() {
-                  Get.to(() => CategoriesDetails(title: categoriesTitles[index], subCategory: subCategories,));
+                  productController.getSubcategories(categoriesTitles[index]);
+                  Get.to(() => CategoriesDetails(title: categoriesTitles[index]));
                 });
               })
         ),
