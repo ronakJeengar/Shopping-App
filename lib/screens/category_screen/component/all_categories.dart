@@ -1,8 +1,6 @@
 import 'package:ecom/consts/consts.dart';
-import 'package:ecom/screens/category_screen/categories_details.dart';
-import 'package:get/get.dart';
 
-Widget getCategories({required String? image, required String? title, required List<List<dynamic>> subCategories}) {
+Widget getCategories({required String? image, required String? title}) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
