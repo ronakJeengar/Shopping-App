@@ -12,8 +12,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  AuthController authController = AuthController(); // Initialize AuthController here
-  ProfileController profileController = ProfileController();
   runApp(const MyApp());
 }
 
