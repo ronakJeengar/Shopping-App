@@ -198,7 +198,7 @@ class ItemDetails extends StatelessWidget {
                     child: Row(
                       children: List.generate(
                         6,
-                            (index) => featuredProduct(
+                            (index) => featuredProductAsset(
                           image: imgP1,
                           height: 150,
                           width: 150,

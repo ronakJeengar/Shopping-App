@@ -211,7 +211,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 child: Row(
                                   children: List.generate(
                                     6,
-                                    (index) => featuredProduct(
+                                    (index) => featuredProductAsset(
                                         image: featuredProductImgs[index],
                                         height: 150,
                                         width: 150,
@@ -265,7 +265,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       crossAxisSpacing: 10,
                                       mainAxisExtent: context.screenHeight * 0.25),
                                   itemBuilder: (context, index) {
-                                    return featuredProduct(
+                                    return featuredProductAsset(
                                         image: featuredProductImgs[index],
                                         height: 200,
                                         width: 200,
