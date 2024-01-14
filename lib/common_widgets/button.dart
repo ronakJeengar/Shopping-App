@@ -46,7 +46,7 @@ Widget elevatedBtnFunction(
     {required String? buttonName,
     required Color? textColor,
     required Color? buttonColor,
-    required VoidCallback onPressedCallback}) {
+    required VoidCallback onPressedCallback,}) {
   return ElevatedButton(
       onPressed: () {
         onPressedCallback;
