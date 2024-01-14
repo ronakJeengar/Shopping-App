@@ -9,7 +9,6 @@ import 'package:path/path.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileController extends GetxController{
-
   RxString profileImgPath = ''.obs;
   dynamic profileImageLink = '';
   RxBool isLoading = false.obs;
