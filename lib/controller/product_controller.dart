@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ecom/consts/consts.dart';
 import 'package:ecom/models/category_model.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -7,6 +9,7 @@ class ProductController extends GetxController {
   var selectedColorIndex = 0.obs;
   var totalPrice = 0.obs;
   List<dynamic> subCat = [];
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Future<void> getSubcategories(String title) async {
     subCat.clear();
@@ -43,7 +46,32 @@ class ProductController extends GetxController {
     }
   }
 
-  calculateTotalPrice(price){
+  calculateTotalPrice(price) {
     totalPrice.value = price * quantity.value;
+  }
+
+  addToCart(
+      {required title,
+      required image,
+      required sellerName,
+      required color,
+      required totalPrice,
+      required qty,
+      required context}) async {
+    await firestore.collection('cart').doc().set({
+      'title': title,
+      'image': image,
+      'sellerName': sellerName,
+      'color': color,
+      'qty': qty,
+      'totalPrice': totalPrice,
+      'added_by': currentUser!.uid,
+    });
+  }
+
+  resetValues(){
+    totalPrice.value = 0;
+    quantity.value = 0;
+    selectedColorIndex.value = 0;
   }
 }
