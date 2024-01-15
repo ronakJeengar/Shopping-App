@@ -1,4 +1,5 @@
 import 'package:ecom/controller/auth_controller.dart';
+import 'package:ecom/controller/cart_controller.dart';
 import 'package:ecom/controller/product_controller.dart';
 import 'package:ecom/controller/profile_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -32,7 +33,7 @@ class MyApp extends StatelessWidget {
               backgroundColor: Colors.transparent),
           fontFamily: regular),
       initialBinding: InitialBindings(), // Add this line
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -43,6 +44,7 @@ class InitialBindings extends Bindings {
     Get.put(AuthController());
     Get.put(ProfileController());
     Get.put(ProductController());
+    Get.put(CartController());
     // Add other controller registrations if needed
   }
 }

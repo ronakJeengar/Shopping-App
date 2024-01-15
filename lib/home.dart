@@ -31,7 +31,8 @@ class _HomeState extends State<Home> {
   var navItemScreen = [
     const HomeScreen(),
     const CategoryScreen(),
-    const Cart(), Profile()
+    const Cart(),
+    const Profile()
   ];
 
   Future<bool?> _showExitDialog(BuildContext context) async {
@@ -62,34 +63,33 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
+        canPop: false,
         onPopInvoked: (bool didPop) async {
           if (didPop) {
             return;
           }
           await _showExitDialog(context);
         },
-      child: Scaffold(
-          body: Column(
-            children: [
-              Obx(() => Expanded(
-                  child:
-                  navItemScreen.elementAt(homeController.currentIndex.value)))
-            ],
-          ),
-          bottomNavigationBar: Obx(
-                () => BottomNavigationBar(
-              currentIndex: homeController.currentIndex.value,
-              selectedItemColor: redColor,
-              selectedLabelStyle: const TextStyle(fontFamily: semibold),
-              type: BottomNavigationBarType.fixed,
-              backgroundColor: Colors.white,
-              items: _barItems,
-              onTap: (value) {
-                homeController.currentIndex.value = value;
-              },
+        child: Scaffold(
+            body: Column(
+              children: [
+                Obx(() => Expanded(
+                    child: navItemScreen
+                        .elementAt(homeController.currentIndex.value)))
+              ],
             ),
-          ))
-    );
+            bottomNavigationBar: Obx(
+              () => BottomNavigationBar(
+                currentIndex: homeController.currentIndex.value,
+                selectedItemColor: redColor,
+                selectedLabelStyle: const TextStyle(fontFamily: semibold),
+                type: BottomNavigationBarType.fixed,
+                backgroundColor: Colors.white,
+                items: _barItems,
+                onTap: (value) {
+                  homeController.currentIndex.value = value;
+                },
+              ),
+            )));
   }
 }
