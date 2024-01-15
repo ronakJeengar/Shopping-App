@@ -20,6 +20,14 @@ class FirestoreServices {
 
   //get cart
   static getCart(uid) {
-    return firestore.collection('cart').where('added_by', isEqualTo: uid).snapshots();
+    return firestore
+        .collection('cart')
+        .where('added_by', isEqualTo: uid)
+        .snapshots();
+  }
+
+  //delete product from the cart
+  static deleteProduct(productId) {
+    return firestore.collection('cart').doc(productId).delete();
   }
 }
