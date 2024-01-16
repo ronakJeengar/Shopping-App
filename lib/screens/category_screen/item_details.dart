@@ -1,7 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ecom/common_widgets/button.dart';
 import 'package:ecom/consts/consts.dart';
 import 'package:ecom/controller/product_controller.dart';
+import 'package:ecom/screens/chat_screen/chat_screen.dart';
 import 'package:ecom/screens/home_screen/component/featured_products.dart';
 import 'package:get/get.dart';
 
@@ -115,12 +114,14 @@ class _ItemDetailsState extends State<ItemDetails> {
                                   .make(),
                             ],
                           )),
-                          const CircleAvatar(
+                          CircleAvatar(
                             backgroundColor: Colors.white,
-                            child: Icon(
+                            child: const Icon(
                               Icons.message_rounded,
                               color: darkFontGrey,
-                            ),
+                            ).box.make().onTap(() {
+                              Get.to(() => const ChatScreen());
+                            }),
                           )
                         ],
                       )
@@ -321,7 +322,6 @@ class _ItemDetailsState extends State<ItemDetails> {
                   ))
             ],
           ),
-        )
-    );
+        ));
   }
 }
