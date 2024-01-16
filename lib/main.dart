@@ -2,6 +2,7 @@ import 'package:ecom/controller/auth_controller.dart';
 import 'package:ecom/controller/cart_controller.dart';
 import 'package:ecom/controller/product_controller.dart';
 import 'package:ecom/controller/profile_controller.dart';
+import 'package:ecom/controller/home_controller.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:get/get.dart';
 import 'firebase_options.dart';
@@ -42,6 +43,7 @@ class InitialBindings extends Bindings {
   @override
   void dependencies() {
     Get.put(AuthController());
+    Get.put(HomeController());
     Get.put(ProfileController());
     Get.put(ProductController());
     Get.put(CartController());
