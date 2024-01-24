@@ -90,6 +90,8 @@ class _HomeState extends State<Home> {
                   homeController.currentIndex.value = value;
                 },
               ),
-            )));
+            )
+        )
+    );
   }
 }
